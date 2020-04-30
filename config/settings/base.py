@@ -74,10 +74,13 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
     "rest_framework",
     "rest_framework.authtoken",
+    "taggit",
 ]
 
 LOCAL_APPS = [
+    "football_opinionated.Comment.apps.CommentConfig",
     "football_opinionated.users.apps.UsersConfig",
+    "Questions",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
