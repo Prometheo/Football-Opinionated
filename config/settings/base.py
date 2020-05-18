@@ -80,7 +80,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "football_opinionated.Comment.apps.CommentConfig",
     "football_opinionated.users.apps.UsersConfig",
-    "Questions",
+    "football_opinionated.Questions.apps.QuestionsConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -220,7 +220,7 @@ X_FRAME_OPTIONS = "DENY"
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = env(
-    "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend"
+    "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
