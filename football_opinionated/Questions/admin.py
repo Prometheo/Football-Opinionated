@@ -1,5 +1,10 @@
-from django.contrib import admin
+from django.contrib import admin 
 from .models import Question
 # Register your models here.
 
-admin.site.register(Question)
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('content',)}
+    list_display = ('user','slug','draft', 'content')
+
+
