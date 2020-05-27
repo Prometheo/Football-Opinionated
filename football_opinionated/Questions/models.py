@@ -29,7 +29,6 @@ def upload_location(instance, filename):
 
 
 
-
 class Question(models.Model):
     content = models.TextField()
     user = models.ForeignKey(User, related_name="Author", on_delete=models.CASCADE)

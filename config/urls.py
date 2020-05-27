@@ -1,10 +1,11 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
-from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.authtoken.views import obtain_auth_token 
+from allauth.account.views import confirm_email
 
 
 
@@ -19,6 +20,9 @@ urlpatterns = [
     # User management
     path("users/", include("football_opinionated.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
+    path("rest-auth/", include("rest_auth.urls")),
+    path("rest-auth/registration/", include("rest_auth.registration.urls")),
+    re_path(r'^account-confirm-email/(?P<key>[-:\w]+)/$', confirm_email, name='account_confirm_email'),
     # Your stuff: custom urls includes go here
     path("api/questions/", include("Questions.api.urls", namespace="questions-api")),
     path("api/comments/", include("Comment.api.urls", namespace="comment-api")),
