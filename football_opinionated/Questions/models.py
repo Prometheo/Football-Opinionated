@@ -3,7 +3,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
 from django.urls import reverse
-from taggit.managers import TaggableManager
 from football_opinionated.users.models import User
 from Comment.models import Comment
 # Create your models here.
@@ -42,7 +41,6 @@ class Question(models.Model):
     draft = models.BooleanField(default=False)
     updated_on = models.DateTimeField(auto_now=True)
     objects = QuestionManager()
-    tags = TaggableManager()
     liked_by = models.ManyToManyField(User, related_name='liked_by', blank=True)
     # likes = models.IntegerField(default=0)
     # shares = models.IntegerField(default=0)

@@ -7,7 +7,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from .permissions import IsOWnerOrReadOnly
 from .serializers import UserSerializer
-
 User = get_user_model()
 
 
@@ -31,9 +30,24 @@ class UserFollowView(views.APIView):
     def get(self, request, username, format=None):
         #quest_obj = Question.objects.get(uuid=uuid)
         #current_user, created = User.objects.get_or_create(username=username)
-        to_person, created = User.objects.get_or_create(username=username)
+        try:
+            to_person= User.objects.get(username=username)
+        except:
+            to_person = None
+        
         message = "Not allowed"
-        if self.request.user.is_authenticated:
+        if self.request.user.is_authenticated and to_person:
             following = User.objects.follow_toggle(self.request.user, to_person)
             return Response({'message':following})
         return Response({'message':message}, status=400)
+
+
+class UserSearchView(views.APIView):
+
+    def get(self, request):
+        keyword = self.request.GET.get('keyword')
+        results = User.objects.filter(username__icontains=keyword)
+        results = UserSerializer(results, many=True, context={'request': request}).data
+        if len(results)>0:
+            return Response(data=results)
+        return Response({'message': 'no matching users where found'})
