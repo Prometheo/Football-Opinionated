@@ -161,7 +161,7 @@ MIDDLEWARE = [
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(ROOT_DIR, 'staticfiles').replace('\\', '/')
 STATICFILES_DIRS = (
-    os.path.join(ROOT_DIR, 'static').replace('\\', '/'),
+    os.path.join(ROOT_DIR, 'static')
 )
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
 STATICFILES_FINDERS = [
