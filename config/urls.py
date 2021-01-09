@@ -1,14 +1,38 @@
+import os
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
-from rest_framework.authtoken.views import obtain_auth_token 
+
 from allauth.account.views import confirm_email
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework import permissions
+from drf_yasg.generators import OpenAPISchemaGenerator
+from drf_yasg.views import get_schema_view, SwaggerUIRenderer
+from drf_yasg import openapi
+
+SwaggerUIRenderer.template = 'drf-yasg.html'
 
 
+class SchemaGenerator(OpenAPISchemaGenerator):
+    def get_schema(self, request=None, public=True):
+        schema = super(SchemaGenerator, self).get_schema(request, public)
+        schema.basePath = os.path.join(schema.basePath, '')
+        return schema
 
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Football Opinionated API",
+        default_version='v1',
+        description="the api service for footbllopinionated.com, a web app for discussing soccer related issues.",
+        ),
+    public=True,
+    url='https://footballopinionated.com/',
+    permission_classes=(permissions.AllowAny,),
+)
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -23,6 +47,10 @@ urlpatterns = [
     path("rest-auth/", include("rest_auth.urls")),
     path("rest-auth/registration/", include("rest_auth.registration.urls")),
     re_path(r'^account-confirm-email/(?P<key>[-:\w]+)/$', confirm_email, name='account_confirm_email'),
+    # Docs
+    path('api/v1/documentation/', schema_view.as_view(), {'format': '.json'}, name='schema-json'),
+    path('api/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('api/redoc', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     # Your stuff: custom urls includes go here
     path("api/questions/", include("Questions.api.urls", namespace="questions-api")),
     path("api/comments/", include("Comment.api.urls", namespace="comment-api")),

@@ -3,11 +3,16 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin
+
 from .serializers import CommentSerializer, CommentDetailSerializer, create_comment_serializer
 from Comment.models import Comment
 from Questions.api.permissions import IsOWnerOrReadOnly
 
+
 class CommentList(generics.ListAPIView):
+    '''
+    Gets all the comments belonging to a question
+    '''
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     lookup_field = 'uuid'
@@ -32,18 +37,19 @@ class CommentDetail(generics.RetrieveAPIView, DestroyModelMixin, UpdateModelMixi
             raise PermissionDenied("you can't delete someone's comment")
         return self.destroy(request, *args, **kwargs)
 
+
 class CommentCreate(generics.CreateAPIView):
     queryset = Comment.objects.all()
 
     def get_serializer_class(self):
         model_type = self.request.GET.get("type")
         slug =  self.request.GET.get("slug")
-        print('req:', self.request)    
+        print('req:', self.request)
         print('GET:', self.request.GET)
         parent_id = self.request.GET.get("parent_id", None)
         return create_comment_serializer(
-                model_type=model_type, 
-                slug=slug, 
+                model_type=model_type,
+                slug=slug,
                 parent_id=parent_id,
                 user=self.request.user
                 )

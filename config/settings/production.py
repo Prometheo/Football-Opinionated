@@ -8,6 +8,7 @@ from sentry_sdk.integrations.celery import CeleryIntegration
 
 from .base import *  # noqa
 from .base import env
+import django_heroku
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -193,3 +194,4 @@ sentry_sdk.init(
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+django_heroku.settings(locals())

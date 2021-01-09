@@ -6,11 +6,11 @@ comment_detail_url = HyperlinkedIdentityField(
         view_name='comment-api:thread',
         lookup_field='uuid'
         )
-    
+
 
 def create_comment_serializer(model_type='question', slug=None, parent_id=None, user=None):
     class CommentCreateSerializer(ModelSerializer):
-        
+
         class Meta:
             model = Comment
             fields = [
@@ -19,13 +19,15 @@ def create_comment_serializer(model_type='question', slug=None, parent_id=None, 
                 'content',
                 'created_on',
             ]
+            ref_name = "create_comment_serializer"
+
         def __init__(self, *args, **kwargs):
             self.model_type = model_type
             self.slug = slug
             self.parent_obj = None
             if parent_id:
                 parent_qs = Comment.objects.filter(id=parent_id)
-                if parent_qs.exists() and parent_qs.count() ==1:
+                if parent_qs.exists() and parent_qs.count() == 1:
                     self.parent_obj = parent_qs.first()
             return super(CommentCreateSerializer, self).__init__(*args, **kwargs)
 
@@ -55,7 +57,8 @@ def create_comment_serializer(model_type='question', slug=None, parent_id=None, 
             return comment
 
     return CommentCreateSerializer
-        
+
+
 class CommentSerializer(ModelSerializer):
     reply_count = SerializerMethodField()
     user = SerializerMethodField()
@@ -107,7 +110,7 @@ class CommentChildSerializer(ModelSerializer):
 
     def get_user(self, obj):
         return obj.user.username
-    
+
     def get_reply_count(self, obj):
         if obj.is_parent:
             return obj.replies().count()
@@ -149,7 +152,7 @@ class CommentDetailSerializer(ModelSerializer):
     def get_likes(self, obj):
         return obj.num_of_goals
 
-    
+
 class CommentLikeSerializer(ModelSerializer):
     class Meta:
         model=Comment

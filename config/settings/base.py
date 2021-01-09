@@ -2,23 +2,28 @@
 Base settings to build other settings files upon.
 """
 from pathlib import Path
-
+from dotenv import load_dotenv
 import environ
+import os
+
+load_dotenv()
 
 ROOT_DIR = Path(__file__).parents[2]
+# ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # football_opinionated/)
-APPS_DIR = ROOT_DIR / "football_opinionated"
+#APPS_DIR = ROOT_DIR / "football_opinionated"
 env = environ.Env()
 
-READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
-if READ_DOT_ENV_FILE:
-    # OS environment variables take precedence over variables from .env
-    env.read_env(str(ROOT_DIR / ".env"))
+# READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
+# if READ_DOT_ENV_FILE:
+#     print(env)
+#     # OS environment variables take precedence over variables from .env
+#     env.read_env(str(ROOT_DIR / ".env"))
 
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = env.bool("DJANGO_DEBUG", False)
+DEBUG = os.getenv("DJANGO_DEBUG")
 # Local time zone. Choices are
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # though not all of them may be available with every OS.
@@ -35,16 +40,23 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
 USE_TZ = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#locale-paths
-LOCALE_PATHS = [str(ROOT_DIR / "locale")]
+LOCALE_PATHS = [os.path.join(ROOT_DIR, 'locale')]
 
 # DATABASES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="postgres://localhost/football_opinionated")
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
+        'ATOMIC_REQUESTS': True,
+    }
 }
-DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 # URLS
 # ------------------------------------------------------------------------------
@@ -76,6 +88,7 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     "rest_auth",
     "rest_auth.registration",
+    "drf_yasg",
 ]
 
 LOCAL_APPS = [
@@ -145,12 +158,11 @@ MIDDLEWARE = [
 
 # STATIC
 # ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-STATIC_ROOT = str(ROOT_DIR / "staticfiles")
-# https://docs.djangoproject.com/en/dev/ref/settings/#static-url
-STATIC_URL = "/static/"
-# https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
-STATICFILES_DIRS = [str(APPS_DIR / "static")]
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(ROOT_DIR, 'staticfiles').replace('\\', '/')
+STATICFILES_DIRS = (
+    os.path.join(ROOT_DIR, 'static').replace('\\', '/'),
+)
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -160,9 +172,8 @@ STATICFILES_FINDERS = [
 # MEDIA
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-root
-MEDIA_ROOT = str(APPS_DIR / "media")
-# https://docs.djangoproject.com/en/dev/ref/settings/#media-url
-MEDIA_URL = "/media/"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(ROOT_DIR, "media").replace('\\', '/')
 
 # TEMPLATES
 # ------------------------------------------------------------------------------
@@ -172,7 +183,7 @@ TEMPLATES = [
         # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-TEMPLATES-BACKEND
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         # https://docs.djangoproject.com/en/dev/ref/settings/#template-dirs
-        "DIRS": [str(APPS_DIR / "templates")],
+        "DIRS": [os.path.join(ROOT_DIR, 'templates')],
         "OPTIONS": {
             # https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders
             # https://docs.djangoproject.com/en/dev/ref/templates/api/#loader-types
@@ -205,7 +216,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 # FIXTURES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#fixture-dirs
-FIXTURE_DIRS = (str(APPS_DIR / "fixtures"),)
+FIXTURE_DIRS = os.path.join(ROOT_DIR, "fixtures")
 
 # SECURITY
 # ------------------------------------------------------------------------------
