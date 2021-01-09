@@ -20,3 +20,4 @@ django-redis==4.11.0  # https://github.com/niwinz/django-redis
 djangorestframework==3.11.0  # https://github.com/encode/django-rest-framework
 django-rest-auth==0.9.5
 drf-yasg==1.20.0
+django-debug-toolbar==2.2
