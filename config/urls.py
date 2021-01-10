@@ -35,7 +35,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+    path("home/", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
         "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     ),
@@ -49,7 +49,7 @@ urlpatterns = [
     re_path(r'^account-confirm-email/(?P<key>[-:\w]+)/$', confirm_email, name='account_confirm_email'),
     # Docs
     path('api/v1/documentation/', schema_view.as_view(), {'format': '.json'}, name='schema-json'),
-    path('api/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('api/redoc', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     # Your stuff: custom urls includes go here
     path("api/questions/", include("Questions.api.urls", namespace="questions-api")),
