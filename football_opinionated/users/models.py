@@ -1,11 +1,10 @@
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import AbstractUser, UserManager as BaseUserManager
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 
-
-class UserManager(UserManager):
+class UserManager(BaseUserManager):
 
     def follow_toggle(self, current_user, person):
         if Friendship.objects.filter(current_user=current_user, to_user=person).exists():
@@ -15,6 +14,7 @@ class UserManager(UserManager):
             friendship, created = Friendship.objects.get_or_create(current_user=current_user, to_user=person)
             message = "started following"
         return message
+
 
 class User(AbstractUser):
 
@@ -30,7 +30,6 @@ class User(AbstractUser):
     friends= models.ManyToManyField('self', through='Friendship', symmetrical=False, related_name='followers')
     objects = UserManager()
 
-
     def __str__(self):
         return self.first_name
 
@@ -44,7 +43,8 @@ class Friendship(models.Model):
     started_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{current_user} follows {to_user}'
+        return f'{self.current_user} follows {self.to_user}'
+
 
 def upload_location(instance, filename):
     ProfileModel = instance.__class__

@@ -24,6 +24,7 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         serializer = UserSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
+
 class UserFollowView(views.APIView):
     permission_classes = [IsAuthenticated]
 
@@ -34,7 +35,7 @@ class UserFollowView(views.APIView):
             to_person= User.objects.get(username=username)
         except:
             to_person = None
-        
+
         message = "Not allowed"
         if self.request.user.is_authenticated and to_person:
             following = User.objects.follow_toggle(self.request.user, to_person)

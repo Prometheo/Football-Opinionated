@@ -316,7 +316,6 @@ SOCIALACCOUNT_ADAPTER = "football_opinionated.users.adapters.SocialAccountAdapte
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
@@ -324,5 +323,9 @@ REST_FRAMEWORK = {
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'football_opinionated.users.api.serializers.UserSerializer',
 }
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'football_opinionated.users.api.serializers.CustomRegisterSerializer'
+}
+REST_SESSION_LOGIN = False
 # Your stuff...
 # ------------------------------------------------------------------------------
