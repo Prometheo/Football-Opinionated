@@ -27,7 +27,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Football Opinionated API",
         default_version='v1',
-        description="the api service for footbllopinionated.com, a web app for discussing soccer related issues.",
+        description="the api service for footbllopinionated.com, a web app for discussing soccer related issues. Think Quora/Twitter but for football.",
         ),
     public=True,
     url='https://footballopinionated.com/',
